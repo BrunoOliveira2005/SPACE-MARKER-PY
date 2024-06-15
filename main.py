@@ -12,7 +12,7 @@ icone = pygame.image.load("assets/icone.png")
 pygame.display.set_icon(icone)
 pygame.display.set_caption("Space Marker")
 fundo = pygame.image.load("assets/fundo.jpg")
-fonte = pygame.font.SysFont("comicsans",100)
+fonte = pygame.font.SysFont("comicsans",14)
 
 
 
@@ -24,13 +24,13 @@ preto = (0,0,0)
 estrelas = []
 
 
-def criarEstrelas():
+def criarEstrelas(): # o nome das estrela n ta alinhado no ponto da estrela 
     posicaoMouse = pygame.mouse.get_pos()
     estrelas.append(posicaoMouse)
     nomeEstrela = simpledialog.askstring("Space Marker","Nome da Estrela:")
     idEstrela = fonte.render(nomeEstrela,True,branco)
     tela.blit(idEstrela,(posicaoMouse))
-    for posicao in estrelas: 
+    for posicao in estrelas:                                    
             pygame.draw.circle(tela,branco,posicao,3,0)
 
 while True:
@@ -42,7 +42,7 @@ while True:
 
 
 
-    #tela.blit(fundo,(0,0))
+    #tela.blit(fundo,(0,0)) 
 
 
 
