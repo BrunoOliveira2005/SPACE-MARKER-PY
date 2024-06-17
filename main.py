@@ -26,7 +26,7 @@ preto = (0,0,0)
 estrelas = []
 
 
-def criarEstrelas(): # o nome das estrela n ta alinhado no ponto da estrela 
+def criarEstrelas():
     posicaoMouse = pygame.mouse.get_pos()
     nomeEstrela = simpledialog.askstring("Space Marker", "Nome da Estrela:", parent=root)
     if not nomeEstrela:
@@ -45,7 +45,7 @@ while running:
 
     tela.blit(fundo,(0,0)) 
 
-    # Desenhar as estrelas e os nomes
+    
     for posicao, nome in estrelas:
         pygame.draw.circle(tela, branco, posicao, 3, 0)
         idEstrela = fonte.render(nome, True, branco)
