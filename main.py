@@ -19,11 +19,9 @@ root = tk.Tk()
 root.withdraw()
 
 
-branco  = (255,255,255)
-preto = (0,0,0)
-
-
-estrelas = [] #<-- Transformar em dicionario e ajeitar o codigo 
+branco = (255, 255, 255)
+preto = (0, 0, 0)
+estrelas = {} 
 
 
 def criarEstrelas():
@@ -31,48 +29,43 @@ def criarEstrelas():
     nomeEstrela = simpledialog.askstring("Space Marker", "Nome da Estrela:", parent=root)
     if not nomeEstrela:
         nomeEstrela = 'Desconhecido'
-    estrelas.append((posicaoMouse, nomeEstrela))
+    estrelas[posicaoMouse]= nomeEstrela
 
 def verificaDB():
-    try:
-        arquivo = open("database.estrelas","r")
-        arquivo.close()
+    if os.path.exists("database.estrelas"):
         return ""
-    except:
-        arquivo = open("database.estrelas","w")
-        arquivo.close()
+    else:
+        with open("database.estrelas", "w") as arquivo:
+            arquivo.close()
         return "Banco de Dados Criado com Sucesso!"
         
 
 def salvarPontos():
-    arquivo = open("database.estrelas","a",encoding= "utf-8")
-    arquivo.write(estrelas + "\n")
-    arquivo.close()
+    with open("database.estrelas", "w", encoding="utf-8") as arquivo:
+        for posicao, nome in estrelas.items():
+            arquivo.write(f"{posicao[0]},{posicao[1]},{nome}\n")
     return "Estrelas salvas com sucesso!"
 
         
 
 def carregarPontos():
     try:
-        arquivo = open("database.estrelas","r",encoding= "utf-8")
-        listaEstrelas = arquivo.readlines()
-        arquivo.close()
-        for posicao, nome in listaEstrelas:
-            pygame.draw.circle(tela, branco, posicao, 3, 0)
-            idEstrela = fonte.render(nome, True, branco)
-            tela.blit(idEstrela, (posicao[0] + 10, posicao[1]))
+        with open("database.estrelas", "r", encoding="utf-8") as arquivo:
+            listaEstrelas = arquivo.readlines()
+        for linha in listaEstrelas:
+            x, y, nome = linha.strip().split(",")
+            estrelas[(int(x), int(y))] = nome
     except:
         return "Não há estrelas para carregar"
 
-
 def deletarPontos():
-    try:
-        arquivo = open("database.estrelas","r",encoding="utf-8")
-        listaEstrelas = arquivo.readlines()
-        listaEstrelas.pop(all)
-        arquivo.close()
-    except:
-        return "Não há estrelas para deletar"
+    if os.path.exists("database.estrelas"):
+        os.remove("database.estrelas")
+    estrelas.clear()
+    return "Estrelas deletadas com sucesso!"
+
+verificaDB()
+carregarPontos()
 
 running = True
 while running:
@@ -93,14 +86,19 @@ while running:
     tela.blit(textoComandos,(10,10))
 
     
-    for posicao, nome in estrelas:
+    for posicao, nome in estrelas.items():
         pygame.draw.circle(tela, branco, posicao, 3, 0)
-        idEstrela = fonte.render(nome, True, branco)
+        textoEstrela = f"{nome} ({posicao[0]}, {posicao[1]})"
+        idEstrela = fonte.render(textoEstrela, True, branco)
         tela.blit(idEstrela, (posicao[0] + 10, posicao[1]))
 
-
-
+    if len(estrelas) > 1:
+        pontos = list(estrelas.keys())
+        pygame.draw.lines(tela, branco, False, pontos, 1)
 
 
     pygame.display.update()
     clock.tick(60)
+
+    #FAZER A BUILD
+    #
