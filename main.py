@@ -100,5 +100,4 @@ while running:
     pygame.display.update()
     clock.tick(60)
 
-    #FAZER A BUILD
-    #
+    
